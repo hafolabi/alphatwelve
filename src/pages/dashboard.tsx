@@ -35,8 +35,15 @@ const Dashboard = () => {
     const [openedTabId, setOpenedtabId] = useState<undefined | number>(undefined);
     const [width, setWidth] = useState(window.innerWidth);
 
-    const contentRef = useRef<HTMLDivElement>(null);
-    const reactToPrintFn = useReactToPrint({ contentRef }); 
+    const componentRef: React.MutableRefObject<HTMLTableElement | null> = useRef(null);
+    const handlePrint = useReactToPrint({
+      content: () => componentRef.current,
+    });
+
+    const componentRef2: React.MutableRefObject<HTMLTableElement | null> = useRef(null);
+    const handlePrint2 = useReactToPrint({
+      content: () => componentRef2.current,
+    });
 
     const divStyle1 = {
       backgroundImage: `url(${carousel1})`,
@@ -366,7 +373,7 @@ const Dashboard = () => {
                   <img src={!darkMode ? images.dotVertical : images.dotVerticalWhite} alt="" />
                 </div>
 
-                <div className="flex gap-2 border py-2 px-4 cursor-pointer"  onClick={()=>reactToPrintFn()}>
+                <div className="flex gap-2 border py-2 px-4 cursor-pointer"  onClick={()=> (width >1280 ) ? handlePrint() : handlePrint2()}>
                   <img src={!darkMode ? images.export : images.exportWhite} alt="" />
                  <p className="text-[14px] font-medium">Export</p> 
                 </div>
@@ -374,11 +381,13 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="xl:px-0 px-4 mt-8 xl:block hidden" ref={contentRef}>
+            {width >=1280 && 
+              <div className="xl:px-0 px-4 mt-8 block " ref={componentRef}>
               <CustomTable data={tableRecordList} columns={columns} onRowClick={onRowClick}/>
-             </div>
+               </div>
+            }
 
-             <div className="flex xl:hidden flex-col justify-center items-center gap-8 mx-auto  mt-8" ref={contentRef}>
+             <div className="flex xl:hidden flex-col justify-center items-center gap-8 mx-auto  mt-8" ref={componentRef2}>
                 {tableRecordListMobile
                   .map((value, index) => (
                     <CollapseComponent
@@ -395,9 +404,9 @@ const Dashboard = () => {
                   <div className="flex justify-between cursor-pointer">
                     <div className="flex items-center gap-4 mr-16">
                       <img src={images.leftpagination} alt="" />
-                      <p className="p-2 rounded-full flex items-center justify-center text-white bg-[#8576FF] h-[30px] w-[30px]">1</p>
-                      <p className="p-2 rounded-full flex items-center justify-center h-[30px] w-[30px]">2</p>
-                      <p className="p-2 rounded-full flex items-center justify-center h-[30px] w-[30px]">3</p>
+                      <p className="p-2 rounded-full flex items-center justify-center text-white bg-[#8576FF] h-[25px] w-[25px]">1</p>
+                      <p className="p-2 rounded-full flex items-center justify-center h-[25px] w-[25px]">2</p>
+                      <p className="p-2 rounded-full flex items-center justify-center h-[25px] w-[25px]">3</p>
                       <img src={images.rightpagination} alt="" />
                     </div>
                       <div>
